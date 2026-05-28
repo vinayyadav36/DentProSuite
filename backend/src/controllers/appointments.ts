@@ -1,0 +1,50 @@
+import { Request, Response } from 'express';
+import { JsonDB } from '../storage/json_db.js';
+import { Appointment } from '../../../shared/types/index.js';
+
+const dbAppointments = new JsonDB<Appointment>('appointments.json');
+
+export const getAppointments = async (req: Request, res: Response) => {
+  try {
+    const { date, dentistId } = req.query;
+    let appointments = await dbAppointments.getAll();
+
+    if (date) {
+      appointments = appointments.filter(a => a.date === date);
+    }
+    if (dentistId) {
+      appointments = appointments.filter(a => a.dentistId === dentistId);
+    }
+
+    // Sort by start time
+    appointments.sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+    res.json(appointments);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const createAppointment = async (req: Request, res: Response) => {
+  try {
+    const newAppt: Appointment = {
+      ...req.body,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString()
+    };
+    const saved = await dbAppointments.insert(newAppt);
+    res.status(201).json(saved);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const updateAppointment = async (req: Request, res: Response) => {
+  try {
+    const updated = await dbAppointments.update(req.params.id, req.body);
+    if (!updated) return res.status(404).json({ error: 'Appointment not found' });
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};

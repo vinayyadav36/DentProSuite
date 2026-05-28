@@ -1,0 +1,12 @@
+[
+  {
+    "id": "clinic-1",
+    "name": "DentistPro360 Demo Clinic",
+    "address": "123 Fake St, Springfield",
+    "chairs": 3,
+    "operatingHours": {
+      "start": "08:00",
+      "end": "18:00"
+    }
+  }
+]
