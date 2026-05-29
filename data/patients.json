@@ -1,0 +1,52 @@
+[
+  {
+    "id": "patient-1",
+    "firstName": "Patient",
+    "lastName": "1",
+    "dateOfBirth": "1990-01-01",
+    "phone": "555-0001",
+    "email": "patient1@test.com",
+    "medicalHistory": {},
+    "createdAt": "2026-05-27T16:50:56.974Z"
+  },
+  {
+    "id": "patient-2",
+    "firstName": "Patient",
+    "lastName": "2",
+    "dateOfBirth": "1990-01-01",
+    "phone": "555-0002",
+    "email": "patient2@test.com",
+    "medicalHistory": {},
+    "createdAt": "2026-05-27T16:50:56.975Z"
+  },
+  {
+    "id": "patient-3",
+    "firstName": "Patient",
+    "lastName": "3",
+    "dateOfBirth": "1990-01-01",
+    "phone": "555-0003",
+    "email": "patient3@test.com",
+    "medicalHistory": {},
+    "createdAt": "2026-05-27T16:50:56.977Z"
+  },
+  {
+    "id": "patient-4",
+    "firstName": "Patient",
+    "lastName": "4",
+    "dateOfBirth": "1990-01-01",
+    "phone": "555-0004",
+    "email": "patient4@test.com",
+    "medicalHistory": {},
+    "createdAt": "2026-05-27T16:50:56.978Z"
+  },
+  {
+    "id": "patient-5",
+    "firstName": "Patient",
+    "lastName": "5",
+    "dateOfBirth": "1990-01-01",
+    "phone": "555-0005",
+    "email": "patient5@test.com",
+    "medicalHistory": {},
+    "createdAt": "2026-05-27T16:50:56.980Z"
+  }
+]

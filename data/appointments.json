@@ -1,0 +1,26 @@
+[
+  {
+    "id": "appt-1",
+    "patientId": "patient-1",
+    "dentistId": "dentist-1",
+    "chairId": 1,
+    "date": "2026-05-27",
+    "startTime": "09:00",
+    "endTime": "10:00",
+    "status": "SCHEDULED",
+    "services": [],
+    "createdAt": "2026-05-27T16:50:56.983Z"
+  },
+  {
+    "id": "appt-2",
+    "patientId": "patient-2",
+    "dentistId": "dentist-1",
+    "chairId": 1,
+    "date": "2026-05-27",
+    "startTime": "10:00",
+    "endTime": "11:00",
+    "status": "COMPLETED",
+    "services": [],
+    "createdAt": "2026-05-27T16:50:56.984Z"
+  }
+]
