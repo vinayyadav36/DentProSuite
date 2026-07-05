@@ -5,17 +5,19 @@
 
     <div class="flex gap-2 mb-4">
       <input type="date" v-model="filterDate" class="border p-2 rounded" />
-      <button class="bg-blue-500 text-white px-4 py-2 rounded" @click="loadSchedule">Refresh Schedule</button>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" @click="loadSchedule">Refresh Schedule</button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div v-if="appointments.loading" class="text-gray-500 py-4">Loading appointments...</div>
+    <div v-else-if="appointments.error" class="text-red-500 py-4">{{ appointments.error }}</div>
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <AppointmentCard
         v-for="a in appointments.appointments"
         :key="a.id"
         :appointment="a"
         @status-changed="loadSchedule"
       />
-      <div v-if="appointments.appointments.length === 0" class="text-gray-500">
+      <div v-if="appointments.appointments.length === 0" class="text-gray-400 col-span-full">
         No appointments scheduled for this date.
       </div>
     </div>
@@ -33,7 +35,6 @@ const appointments = useAppointmentStore();
 const filterDate = ref(new Date().toISOString().split('T')[0]);
 
 const loadSchedule = () => {
-  // Pass dentist ID from auth user
   appointments.fetchAppointments(filterDate.value, auth.user?.id);
 };
 

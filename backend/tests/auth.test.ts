@@ -14,6 +14,16 @@ describe('Auth Endpoints', () => {
       .send({ email: 'admin@clinic.com' });
 
     expect(res.status).toBe(400);
-    expect(res.body.error).toBe('Email and password required');
+    expect(res.body.error).toBe('Validation failed');
+    expect(res.body.details).toBeDefined();
+  });
+
+  it('should return 400 if email is invalid', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'not-an-email', password: 'password123' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Validation failed');
   });
 });

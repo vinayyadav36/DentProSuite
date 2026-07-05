@@ -1,10 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import 'fake-indexeddb/auto';
 import { queueSyncRequest, getSyncQueue, clearSyncQueueItem, initDB } from '../src/services/offlineStorage';
+=======
+import 'fake-indexeddb/auto';
+import { queueSyncRequest, getSyncQueue, clearSyncQueueItem, initDB } from '../src/services/offlineStorage';
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 
-describe('Offline Storage Queue', () => {
+describe('Offline Storage Cache', () => {
   beforeEach(async () => {
-    // Clear the idb object store before each test
     const db = await initDB();
     const tx = db.transaction('sync-queue', 'readwrite');
     await tx.objectStore('sync-queue').clear();
@@ -20,7 +23,6 @@ describe('Offline Storage Queue', () => {
     expect(queuedItems[0].method).toBe('POST');
     expect(queuedItems[0].body).toEqual(payload);
   });
-
   it('should remove a sync item', async () => {
     await queueSyncRequest('/api/test', 'POST', { q: 1 });
     let queuedItems = await getSyncQueue();
@@ -31,5 +33,9 @@ describe('Offline Storage Queue', () => {
 
     queuedItems = await getSyncQueue();
     expect(queuedItems.length).toBe(0);
+<<<<<<< HEAD
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
+=======
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   });
 });

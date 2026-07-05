@@ -22,5 +22,17 @@
     "status": "COMPLETED",
     "services": [],
     "createdAt": "2026-05-27T16:50:56.984Z"
+  },
+  {
+    "patientId": "12345u",
+    "dentistId": "dentist-1",
+    "chairId": 1,
+    "date": "2026-07-05",
+    "startTime": "09:00",
+    "endTime": "10:00",
+    "status": "SCHEDULED",
+    "services": [],
+    "id": "a60e8b9c-837c-47f8-b2f8-3ec64f460efd",
+    "createdAt": "2026-07-05T09:06:58.966Z"
   }
 ]

@@ -65,6 +65,9 @@ export class LocalJsonAdapter<T extends { id: string }> implements StorageAdapte
     if (index === -1) return undefined;
 
     all[index] = { ...all[index], ...updates } as T;
+=======
+    all[index] = { ...all[index], ...updates } as T;
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
     await writeJson(this.filename, all);
     return all[index];
   }
