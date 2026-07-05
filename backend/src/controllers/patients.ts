@@ -16,7 +16,13 @@ export const getPatients = async (req: Request, res: Response) => {
 
 export const getPatientById = async (req: Request, res: Response) => {
   try {
-    const patient = await dbPatients.getById(req.params.id);
+<<<<<<< HEAD
+    const id = req.params.id;
+    if (typeof id !== 'string') return res.status(400).json({ error: 'Missing patient ID' });
+=======
+    const id = req.params.id as string;
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
+    const patient = await dbPatients.getById(id);
     if (!patient) return res.status(404).json({ error: 'Patient not found' });
     res.json(patient);
   } catch (error) {
@@ -40,7 +46,13 @@ export const createPatient = async (req: Request, res: Response) => {
 
 export const updatePatient = async (req: Request, res: Response) => {
   try {
-    const updated = await dbPatients.update(req.params.id, req.body);
+<<<<<<< HEAD
+    const id = req.params.id;
+    if (typeof id !== 'string') return res.status(400).json({ error: 'Missing patient ID' });
+=======
+    const id = req.params.id as string;
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
+    const updated = await dbPatients.update(id, req.body);
     if (!updated) return res.status(404).json({ error: 'Patient not found' });
     res.json(updated);
   } catch (error) {

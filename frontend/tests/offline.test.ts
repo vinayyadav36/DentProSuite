@@ -1,45 +1,83 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { saveOfflineSubmission, getOfflineSubmissions, removeOfflineSubmission, initDB } from '../src/services/offlineStorage.ts';
+<<<<<<< HEAD
+import { initDB, cacheData, getCachedData, queueSyncRequest, getSyncQueue, clearSyncQueueItem } from '../src/services/offlineStorage.ts';
+=======
+import 'fake-indexeddb/auto';
+import { queueSyncRequest, getSyncQueue, clearSyncQueueItem, initDB } from '../src/services/offlineStorage';
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 
-describe('Offline Storage Queue', () => {
+describe('Offline Storage Cache', () => {
   beforeEach(async () => {
-    // Clear the idb object store before each test
     const db = await initDB();
-    const tx = db.transaction('offline-submissions', 'readwrite');
-    await tx.objectStore('offline-submissions').clear();
+<<<<<<< HEAD
+    const tx = db.transaction('cached-data', 'readwrite');
+    await tx.objectStore('cached-data').clear();
   });
 
-  it('should save and retrieve a submission', async () => {
-    const dummySubmission = {
-      id: 'temp-1',
-      templateId: 't-1',
-      patientId: 'p-1',
-      data: { a: 1 },
-      submittedAt: new Date().toISOString()
-    } as any;
-
-    await saveOfflineSubmission(dummySubmission);
-    const results = await getOfflineSubmissions();
-
-    expect(results.length).toBe(1);
-    expect(results[0].templateId).toBe('t-1');
+  it('should cache and retrieve data', async () => {
+    await cacheData('test_key', { hello: 'world' });
+    const result = await getCachedData('test_key');
+    expect(result).toEqual({ hello: 'world' });
   });
 
-  it('should remove a submission', async () => {
-    const dummySubmission = {
-      id: 'temp-2',
-      templateId: 't-2',
-      patientId: 'p-2',
-      data: {},
-      submittedAt: new Date().toISOString()
-    } as any;
+  it('should return null for missing cache key', async () => {
+    const result = await getCachedData('nonexistent');
+    expect(result).toBeNull();
+  });
+});
 
-    await saveOfflineSubmission(dummySubmission);
-    let results = await getOfflineSubmissions();
-    expect(results.length).toBe(1);
+describe('Offline Sync Queue', () => {
+  beforeEach(async () => {
+    const db = await initDB();
+    const tx = db.transaction('sync-queue', 'readwrite');
+    await tx.objectStore('sync-queue').clear();
+  });
 
-    await removeOfflineSubmission('temp-2');
-    results = await getOfflineSubmissions();
-    expect(results.length).toBe(0);
+  it('should queue a sync request and retrieve it', async () => {
+    await queueSyncRequest('/api/test', 'POST', { foo: 'bar' });
+    const queue = await getSyncQueue();
+    expect(queue.length).toBe(1);
+    expect(queue[0].url).toBe('/api/test');
+    expect(queue[0].method).toBe('POST');
+    expect(queue[0].body).toEqual({ foo: 'bar' });
+  });
+
+  it('should clear a queued item by id', async () => {
+    await queueSyncRequest('/api/test', 'POST', {});
+    let queue = await getSyncQueue();
+    expect(queue.length).toBe(1);
+
+    if (queue[0].id !== undefined) {
+      await clearSyncQueueItem(queue[0].id);
+    }
+    queue = await getSyncQueue();
+    expect(queue.length).toBe(0);
+=======
+    const tx = db.transaction('sync-queue', 'readwrite');
+    await tx.objectStore('sync-queue').clear();
+  });
+
+  it('should queue a sync request and retrieve it', async () => {
+    const payload = { templateId: '123', answers: { q1: 'yes' } };
+    await queueSyncRequest('/api/test', 'POST', payload);
+
+    const queuedItems = await getSyncQueue();
+    expect(queuedItems.length).toBe(1);
+    expect(queuedItems[0].url).toContain('/api/test');
+    expect(queuedItems[0].method).toBe('POST');
+    expect(queuedItems[0].body).toEqual(payload);
+  });
+
+  it('should remove a sync item', async () => {
+    await queueSyncRequest('/api/test', 'POST', { q: 1 });
+    let queuedItems = await getSyncQueue();
+    expect(queuedItems.length).toBe(1);
+
+    const itemId = queuedItems[0].id!;
+    await clearSyncQueueItem(itemId);
+
+    queuedItems = await getSyncQueue();
+    expect(queuedItems.length).toBe(0);
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   });
 });

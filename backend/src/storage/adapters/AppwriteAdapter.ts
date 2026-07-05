@@ -1,36 +1,185 @@
+import { Client, Databases, ID, Query } from 'node-appwrite';
 import { StorageAdapter } from '../StorageAdapter.js';
+import { getEnv } from '../../utils/env.js';
+<<<<<<< HEAD
+import { Client, Databases, Query } from 'appwrite';
+=======
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 
 export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter<T> {
-  private collectionName: string;
+  private collectionId: string;
+  private databaseId: string;
+<<<<<<< HEAD
+  private databases: Databases;
 
   constructor(collectionName: string) {
-    this.collectionName = collectionName;
-    // Appwrite SDK initialization logic will go here
-    // based on process.env.APPWRITE_PROJECT_ID, APPWRITE_ENDPOINT, etc.
+    this.collectionId = collectionName;
+    const env = getEnv();
+    this.databaseId = env.APPWRITE_DATABASE_ID ?? '';
+
+    const client = new Client()
+      .setEndpoint(env.APPWRITE_ENDPOINT ?? '')
+      .setProject(env.APPWRITE_PROJECT_ID ?? '');
+
+    this.databases = new Databases(client);
+=======
+  private client: Client;
+  private databases: Databases;
+
+  constructor(collectionName: string) {
+    const env = getEnv();
+    this.client = new Client()
+      .setEndpoint(env.APPWRITE_ENDPOINT!)
+      .setProject(env.APPWRITE_PROJECT_ID!)
+      .setKey(env.APPWRITE_API_KEY!);
+
+    this.databases = new Databases(this.client);
+    this.databaseId = env.APPWRITE_DATABASE_ID!;
+
+    // Fallback simple mapping, preferably collectionName maps exactly to collectionId
+    this.collectionId = collectionName;
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   }
 
   async getAll(): Promise<T[]> {
-    console.warn(`AppwriteAdapter.getAll not yet fully implemented for ${this.collectionName}`);
-    return [];
+    try {
+      const response = await this.databases.listDocuments(
+        this.databaseId,
+<<<<<<< HEAD
+        this.collectionId
+      );
+      return response.documents.map(doc => {
+        const { $id, $collectionId, $databaseId, $createdAt, $updatedAt, $permissions, ...rest } = doc;
+        return { id: $id, ...rest } as unknown as T;
+      });
+    } catch (error) {
+      console.error('AppwriteAdapter.getAll error:', error);
+=======
+        this.collectionId,
+        [Query.limit(100)]
+      );
+      return response.documents.map(doc => {
+        const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+        return { id: $id, ...rest } as unknown as T;
+      });
+    } catch (error) {
+      console.error(`Appwrite getAll failed for ${this.collectionId}:`, error);
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
+      return [];
+    }
   }
 
   async getById(id: string): Promise<T | undefined> {
-    console.warn(`AppwriteAdapter.getById not yet fully implemented for ${this.collectionName}`);
-    return undefined;
+    try {
+      const doc = await this.databases.getDocument(
+        this.databaseId,
+        this.collectionId,
+        id
+      );
+<<<<<<< HEAD
+      const { $id, $collectionId, $databaseId, $createdAt, $updatedAt, $permissions, ...rest } = doc;
+      return { id: $id, ...rest } as unknown as T;
+    } catch (error) {
+      console.error('AppwriteAdapter.getById error:', error);
+=======
+      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+      return { id: $id, ...rest } as unknown as T;
+    } catch (error: any) {
+      if (error?.code !== 404) {
+         console.error(`Appwrite getById failed for ${this.collectionId}:`, error);
+      }
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
+      return undefined;
+    }
   }
 
   async insert(item: T): Promise<T> {
-    console.warn(`AppwriteAdapter.insert not yet fully implemented for ${this.collectionName}`);
-    return item;
+    try {
+      const { id, ...data } = item;
+      const doc = await this.databases.createDocument(
+        this.databaseId,
+        this.collectionId,
+<<<<<<< HEAD
+        id,
+        data as Record<string, unknown>
+      );
+      const { $id, ...rest } = doc;
+      return { id: $id, ...rest } as unknown as T;
+    } catch (error) {
+      console.error('AppwriteAdapter.insert error:', error);
+      throw error;
+=======
+        id || ID.unique(),
+        data
+      );
+      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+      return { id: $id, ...rest } as unknown as T;
+    } catch (error) {
+       console.error(`Appwrite insert failed for ${this.collectionId}:`, error);
+       throw error;
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
+    }
   }
 
   async update(id: string, updates: Partial<T>): Promise<T | undefined> {
-    console.warn(`AppwriteAdapter.update not yet fully implemented for ${this.collectionName}`);
-    return undefined; // TODO: Implement
+    try {
+<<<<<<< HEAD
+      const { id: _, ...data } = updates as any;
+      const doc = await this.databases.updateDocument(
+        this.databaseId,
+        this.collectionId,
+        id,
+        data as Record<string, unknown>
+      );
+      const { $id, ...rest } = doc;
+      return { id: $id, ...rest } as unknown as T;
+    } catch (error) {
+      console.error('AppwriteAdapter.update error:', error);
+=======
+       // Omit id from updates if present
+       const cleanUpdates = { ...updates };
+       delete cleanUpdates.id;
+
+       const doc = await this.databases.updateDocument(
+         this.databaseId,
+         this.collectionId,
+         id,
+         cleanUpdates
+       );
+       const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+       return { id: $id, ...rest } as unknown as T;
+    } catch (error) {
+      console.error(`Appwrite update failed for ${this.collectionId}:`, error);
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
+      return undefined;
+    }
   }
 
   async delete(id: string): Promise<boolean> {
-    console.warn(`AppwriteAdapter.delete not yet fully implemented for ${this.collectionName}`);
-    return false;
+<<<<<<< HEAD
+    try {
+      await this.databases.deleteDocument(
+        this.databaseId,
+        this.collectionId,
+        id
+      );
+      return true;
+    } catch (error) {
+      console.error('AppwriteAdapter.delete error:', error);
+      return false;
+    }
+=======
+     try {
+       await this.databases.deleteDocument(
+         this.databaseId,
+         this.collectionId,
+         id
+       );
+       return true;
+     } catch (error) {
+       console.error(`Appwrite delete failed for ${this.collectionId}:`, error);
+       return false;
+     }
+>>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   }
 }
