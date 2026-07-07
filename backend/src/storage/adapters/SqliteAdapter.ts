@@ -21,6 +21,10 @@ function getDb(): sqlite3.Database {
       id TEXT PRIMARY KEY,
       data TEXT
     )`);
+    dbInstance!.run(`CREATE TABLE IF NOT EXISTS clinics (
+      id TEXT PRIMARY KEY,
+      data TEXT
+    )`);
     dbInstance!.run(`CREATE TABLE IF NOT EXISTS patients (
       id TEXT PRIMARY KEY,
       data TEXT
@@ -29,11 +33,11 @@ function getDb(): sqlite3.Database {
       id TEXT PRIMARY KEY,
       data TEXT
     )`);
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS formTemplates (
+    dbInstance!.run(`CREATE TABLE IF NOT EXISTS templates (
       id TEXT PRIMARY KEY,
       data TEXT
     )`);
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS formSubmissions (
+    dbInstance!.run(`CREATE TABLE IF NOT EXISTS submissions (
       id TEXT PRIMARY KEY,
       data TEXT
     )`);
@@ -99,6 +103,40 @@ export class SqliteAdapter<T extends { id: string }> implements StorageAdapter<T
       return JSON.parse(row.data);
     } catch (e) {
       return undefined;
+    }
+  }
+
+  async getByEmail(email: string): Promise<T | undefined> {
+    try {
+      const rows = await this.queryAll(`SELECT data FROM ${this.collectionName}`);
+      for (const row of rows) {
+         const item = JSON.parse(row.data);
+         if (item.email === email) return item;
+      }
+      return undefined;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  async findMany(query: Partial<T>): Promise<T[]> {
+    try {
+      const rows = await this.queryAll(`SELECT data FROM ${this.collectionName}`);
+      const results: T[] = [];
+      for (const row of rows) {
+        const item = JSON.parse(row.data);
+        let match = true;
+        for (const [key, value] of Object.entries(query)) {
+          if (item[key] !== value) {
+            match = false;
+            break;
+          }
+        }
+        if (match) results.push(item);
+      }
+      return results;
+    } catch (e) {
+      return [];
     }
   }
 

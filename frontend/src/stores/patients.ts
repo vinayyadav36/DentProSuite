@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Patient } from '../../../shared/types/index.js';
 import { DataService } from '../services/api';
-=======
-import { DataService } from '../services/api';
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 
 const patientsService = new DataService('/api/patients', 'patients');
 
@@ -23,10 +20,6 @@ export const usePatientStore = defineStore('patients', {
         this.error = err.message || 'Failed to fetch patients';
       } finally {
         this.isLoading = false;
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
       }
     }
   }

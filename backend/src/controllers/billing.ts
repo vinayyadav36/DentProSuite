@@ -14,7 +14,15 @@ export const getRevenueOverview = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'startDate and endDate are required' });
     }
 
-    const appointments = await dbAppointments.getAll();
+    // In an ideal world, the findMany method or a new query method could do date range filtering.
+    // For now we can at least filter by 'COMPLETED' status down in the database layer.
+    let appointments;
+    if (dbAppointments.findMany) {
+      appointments = await dbAppointments.findMany({ status: 'COMPLETED' as any });
+    } else {
+      appointments = await dbAppointments.getAll();
+      appointments = appointments.filter(a => a.status === 'COMPLETED');
+    }
 
     let totalRevenue = 0;
     let completedCount = 0;
@@ -23,12 +31,10 @@ export const getRevenueOverview = async (req: Request, res: Response) => {
     const AVG_REVENUE_PER_APPT = 150;
 
     appointments.forEach(appt => {
-      if (appt.date >= startDate && appt.date <= endDate) {
-        if (appt.status === 'COMPLETED') {
-          completedCount++;
-          // In a real app we'd sum up appt.services prices
-          totalRevenue += AVG_REVENUE_PER_APPT;
-        }
+      if (appt.date >= (startDate as string) && appt.date <= (endDate as string)) {
+        completedCount++;
+        // In a real app we'd sum up appt.services prices
+        totalRevenue += AVG_REVENUE_PER_APPT;
       }
     });
 

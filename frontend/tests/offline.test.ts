@@ -1,10 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import 'fake-indexeddb/auto';
 import { queueSyncRequest, getSyncQueue, clearSyncQueueItem, initDB } from '../src/services/offlineStorage';
-=======
-import 'fake-indexeddb/auto';
-import { queueSyncRequest, getSyncQueue, clearSyncQueueItem, initDB } from '../src/services/offlineStorage';
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 
 describe('Offline Storage Cache', () => {
   beforeEach(async () => {
@@ -33,9 +29,5 @@ describe('Offline Storage Cache', () => {
 
     queuedItems = await getSyncQueue();
     expect(queuedItems.length).toBe(0);
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   });
 });

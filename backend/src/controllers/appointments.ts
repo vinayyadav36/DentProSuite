@@ -7,13 +7,22 @@ const dbAppointments = getDatabaseAdapter<Appointment>('appointments');
 export const getAppointments = async (req: Request, res: Response) => {
   try {
     const { date, dentistId } = req.query;
-    let appointments = await dbAppointments.getAll();
 
-    if (date) {
-      appointments = appointments.filter(a => a.date === date);
-    }
-    if (dentistId) {
-      appointments = appointments.filter(a => a.dentistId === dentistId);
+    const query: Partial<Appointment> = {};
+    if (date) query.date = date as string;
+    if (dentistId) query.dentistId = dentistId as string;
+
+    let appointments = dbAppointments.findMany
+      ? await dbAppointments.findMany(query)
+      : await dbAppointments.getAll();
+
+    if (!dbAppointments.findMany) {
+      if (date) {
+        appointments = appointments.filter(a => a.date === date);
+      }
+      if (dentistId) {
+        appointments = appointments.filter(a => a.dentistId === dentistId);
+      }
     }
 
     // Sort by start time
@@ -42,9 +51,6 @@ export const createAppointment = async (req: Request, res: Response) => {
 export const updateAppointment = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
-=======
-    const id = req.params.id as string;
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
     const updated = await dbAppointments.update(id, req.body);
     if (!updated) return res.status(404).json({ error: 'Appointment not found' });
     res.json(updated);

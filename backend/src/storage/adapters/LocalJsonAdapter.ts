@@ -52,6 +52,22 @@ export class LocalJsonAdapter<T extends { id: string }> implements StorageAdapte
     return all.find(item => item.id === id);
   }
 
+  async getByEmail(email: string): Promise<T | undefined> {
+    const all = await this.getAll();
+    // Use any since T might not have email, but we know it does in context
+    return all.find((item: any) => item.email === email);
+  }
+
+  async findMany(query: Partial<T>): Promise<T[]> {
+    const all = await this.getAll();
+    return all.filter((item: any) => {
+      for (const [key, value] of Object.entries(query)) {
+        if (item[key] !== value) return false;
+      }
+      return true;
+    });
+  }
+
   async insert(item: T): Promise<T> {
     const all = await this.getAll();
     all.push(item);
@@ -65,9 +81,6 @@ export class LocalJsonAdapter<T extends { id: string }> implements StorageAdapte
     if (index === -1) return undefined;
 
     all[index] = { ...all[index], ...updates } as T;
-=======
-    all[index] = { ...all[index], ...updates } as T;
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
     await writeJson(this.filename, all);
     return all[index];
   }
