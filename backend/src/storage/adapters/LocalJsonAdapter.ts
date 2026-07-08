@@ -1,8 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-// Define the root data path. Adjust if running from different directories.
-// In dev, 'backend' is the cwd or parent depending on how it's run.
 const DATA_DIR = path.join(process.cwd(), '../data');
 
 export async function ensureDataDirExists() {
@@ -65,9 +63,6 @@ export class LocalJsonAdapter<T extends { id: string }> implements StorageAdapte
     if (index === -1) return undefined;
 
     all[index] = { ...all[index], ...updates } as T;
-=======
-    all[index] = { ...all[index], ...updates } as T;
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
     await writeJson(this.filename, all);
     return all[index];
   }

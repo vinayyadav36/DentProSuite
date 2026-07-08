@@ -19,9 +19,6 @@ export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction)
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-=======
-  const token = authHeader.split(' ')[1] as string;
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   const decoded = verifyToken(token) as { id: string; role: UserRole } | null;
 
   if (!decoded) {

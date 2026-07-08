@@ -31,9 +31,6 @@ export const createTemplate = async (req: Request, res: Response) => {
 export const updateTemplate = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
-=======
-    const id = req.params.id as string;
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
     const updated = await dbTemplates.update(id, req.body);
     if (!updated) return res.status(404).json({ error: 'Template not found' });
     res.json(updated);

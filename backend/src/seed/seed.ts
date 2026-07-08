@@ -77,9 +77,6 @@ async function seed() {
 
   // 5. Appointments (Sample)
   const today = new Date().toISOString().split('T')[0] as string;
-=======
-  const today = new Date().toISOString().split('T')[0] as string;
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   await dbAppointments.insert({
     id: 'appt-1',
     patientId: 'patient-1',

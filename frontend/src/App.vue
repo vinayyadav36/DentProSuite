@@ -27,10 +27,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { syncQueue } from './services/offlineStorage.js';
+import { useAuthStore } from './stores/auth.js';
+import { getSyncQueue, syncQueue } from './services/offlineStorage.js';
+import { isAppwriteConfigured, verifyAppwriteSetup } from './lib/appwrite.js';
 import SyncStatus from './components/SyncStatus.vue';
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 
 const auth = useAuthStore();
 const router = useRouter();

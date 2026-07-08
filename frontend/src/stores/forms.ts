@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia';
 import type { FormTemplate, FormSubmission } from '../../../shared/types/index.js';
 import { DataService } from '../services/api';
-=======
-import { DataService } from '../services/api';
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 
 const templatesService = new DataService('/api/forms/templates', 'formTemplates');
 const submissionsService = new DataService('/api/forms/submissions', 'formSubmissions');
@@ -35,10 +32,6 @@ export const useFormStore = defineStore('forms', {
         console.error('Failed to submit form directly. Offline queue will handle it.', error);
         return false;
       }
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
     }
   }
 });
