@@ -1,8 +1,6 @@
 import { Client, Databases, ID, Query } from 'node-appwrite';
 import { StorageAdapter } from '../StorageAdapter.js';
 import { getEnv } from '../../utils/env.js';
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 
 export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter<T> {
   private collectionId: string;
@@ -22,10 +20,6 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
 
     // Fallback simple mapping, preferably collectionName maps exactly to collectionId
     this.collectionId = collectionName;
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   }
 
   async getAll(): Promise<T[]> {
@@ -36,15 +30,11 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
         [Query.limit(100)]
       );
       return response.documents.map(doc => {
-        const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+        const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
         return { id: $id, ...rest } as unknown as T;
       });
     } catch (error) {
       console.error(`Appwrite getAll failed for ${this.collectionId}:`, error);
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
       return [];
     }
   }
@@ -56,17 +46,53 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
         this.collectionId,
         id
       );
-      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
       return { id: $id, ...rest } as unknown as T;
     } catch (error: any) {
       if (error?.code !== 404) {
          console.error(`Appwrite getById failed for ${this.collectionId}:`, error);
       }
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
       return undefined;
+    }
+  }
+
+  async getByEmail(email: string): Promise<T | undefined> {
+    try {
+      const response = await this.databases.listDocuments(
+        this.databaseId,
+        this.collectionId,
+        [Query.equal('email', email), Query.limit(1)]
+      );
+      if (response.documents.length === 0) return undefined;
+      const doc = response.documents[0];
+      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
+      return { id: $id, ...rest } as unknown as T;
+    } catch (error) {
+      console.error(`Appwrite getByEmail failed for ${this.collectionId}:`, error);
+      return undefined;
+    }
+  }
+
+  async findMany(query: Partial<T>): Promise<T[]> {
+    try {
+      const appwriteQueries = [];
+      for (const [key, value] of Object.entries(query)) {
+        appwriteQueries.push(Query.equal(key, String(value)));
+      }
+      appwriteQueries.push(Query.limit(100));
+
+      const response = await this.databases.listDocuments(
+        this.databaseId,
+        this.collectionId,
+        appwriteQueries
+      );
+      return response.documents.map(doc => {
+        const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
+        return { id: $id, ...rest } as unknown as T;
+      });
+    } catch (error) {
+      console.error(`Appwrite findMany failed for ${this.collectionId}:`, error);
+      return [];
     }
   }
 
@@ -79,15 +105,11 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
         id || ID.unique(),
         data
       );
-      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
       return { id: $id, ...rest } as unknown as T;
     } catch (error) {
        console.error(`Appwrite insert failed for ${this.collectionId}:`, error);
        throw error;
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
     }
   }
 
@@ -103,14 +125,10 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
          id,
          cleanUpdates
        );
-       const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+       const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
        return { id: $id, ...rest } as unknown as T;
     } catch (error) {
       console.error(`Appwrite update failed for ${this.collectionId}:`, error);
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
       return undefined;
     }
   }
@@ -127,9 +145,5 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
        console.error(`Appwrite delete failed for ${this.collectionId}:`, error);
        return false;
      }
-<<<<<<< HEAD
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
   }
 }

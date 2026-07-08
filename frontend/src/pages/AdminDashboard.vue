@@ -20,7 +20,7 @@
       <div class="bg-white p-4 rounded shadow">
         <h2 class="text-xl font-semibold mb-2">Form Templates</h2>
         <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" @click="showBuilder = true">Create New Template</button>
-        <div v-if="forms.loading" class="mt-4 text-gray-500">Loading templates...</div>
+        <div v-if="forms.isLoading" class="mt-4 text-gray-500">Loading templates...</div>
         <ul v-else class="mt-4 space-y-2">
           <li v-for="t in forms.templates" :key="t.id" class="border p-2 rounded">
             {{ t.title }} ({{ t.isActive ? 'Active' : 'Draft' }})

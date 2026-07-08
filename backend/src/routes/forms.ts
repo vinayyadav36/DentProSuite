@@ -11,6 +11,6 @@ router.post('/templates', requireAuth, requireRoles(['ADMIN']), validate(createT
 router.put('/templates/:id', requireAuth, requireRoles(['ADMIN']), validate(updateTemplateSchema), updateTemplate);
 
 router.get('/submissions', requireAuth, getSubmissions);
-router.post('/submissions', validate(submitFormSchema), submitForm);
+router.post('/submissions', requireAuth, requireRoles(['ADMIN', 'RECEPTION', 'DENTIST', 'PATIENT']), validate(submitFormSchema), submitForm);
 
 export default router;

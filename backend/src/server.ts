@@ -31,15 +31,10 @@ app.use('/api/billing', billingRoutes);
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', storageAdapter: env.STORAGE_ADAPTER });
-=======
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
 });
 
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} in ${env.NODE_ENV} mode using ${env.STORAGE_ADAPTER} adapter`);
-=======
-  console.log(`Server running on port ${PORT} in ${env.NODE_ENV} mode using ${env.STORAGE_ADAPTER} adapter`);
->>>>>>> 0a3d8169160c949370332006f3066950243c45c3
+  // console.log(`Server running on port ${PORT} in ${env.NODE_ENV} mode using ${env.STORAGE_ADAPTER} adapter`);
 });

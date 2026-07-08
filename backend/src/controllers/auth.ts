@@ -14,8 +14,13 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
-    const users = await dbUsers.getAll();
-    const user = users.find(u => u.email === email);
+    let user;
+    if (dbUsers.getByEmail) {
+      user = await dbUsers.getByEmail(email);
+    } else {
+      const users = await dbUsers.getAll();
+      user = users.find(u => u.email === email);
+    }
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
