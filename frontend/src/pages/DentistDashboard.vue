@@ -8,7 +8,7 @@
       <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" @click="loadSchedule">Refresh Schedule</button>
     </div>
 
-    <div v-if="appointments.loading" class="text-gray-500 py-4">Loading appointments...</div>
+    <div v-if="appointments.isLoading" class="text-gray-500 py-4">Loading appointments...</div>
     <div v-else-if="appointments.error" class="text-red-500 py-4">{{ appointments.error }}</div>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <AppointmentCard

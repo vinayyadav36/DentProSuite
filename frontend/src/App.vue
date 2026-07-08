@@ -29,8 +29,8 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from './stores/auth.js';
 import { getSyncQueue, syncQueue } from './services/offlineStorage.js';
-import { isAppwriteConfigured, verifyAppwriteSetup } from './lib/appwrite.js';
 import SyncStatus from './components/SyncStatus.vue';
+import { isAppwriteEnabled, account } from './services/appwrite.js';
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -61,8 +61,8 @@ onMounted(async () => {
   window.addEventListener('offline', updateOnlineStatus);
   updateSyncCount();
   syncInterval = setInterval(updateSyncCount, 10000);
-  if (isAppwriteConfigured) {
-    await verifyAppwriteSetup();
+  if (isAppwriteEnabled) {
+    await account.get();
   }
 });
 

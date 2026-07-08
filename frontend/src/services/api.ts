@@ -62,7 +62,7 @@ export class DataService {
         await cacheData(cacheKey, result);
         return result;
       } catch (err) {
-        console.warn(`Fetch from network failed for ${this.routePrefix}, falling back to cache`, err);
+        console.info(`Fetch from network failed for ${this.routePrefix}, falling back to cache`, err);
       }
     }
 
@@ -87,7 +87,7 @@ export class DataService {
          await cacheData(cacheKey, result);
          return result;
        } catch (err) {
-         console.warn(`Fetch from network failed for ${this.routePrefix}/${id}, falling back to cache`);
+         console.info(`Fetch from network failed for ${this.routePrefix}/${id}, falling back to cache`);
        }
     }
     return await getCachedData(cacheKey);

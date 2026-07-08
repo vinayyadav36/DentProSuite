@@ -42,10 +42,15 @@ export const updateTemplate = async (req: Request, res: Response) => {
 export const getSubmissions = async (req: Request, res: Response) => {
   try {
     const patientId = req.query.patientId as string | undefined;
-    let submissions = await dbSubmissions.getAll();
+    let submissions;
 
-    if (patientId) {
-      submissions = submissions.filter(s => s.patientId === patientId);
+    if (patientId && dbSubmissions.findMany) {
+      submissions = await dbSubmissions.findMany({ patientId });
+    } else {
+      submissions = await dbSubmissions.getAll();
+      if (patientId) {
+        submissions = submissions.filter(s => s.patientId === patientId);
+      }
     }
 
     res.json(submissions);

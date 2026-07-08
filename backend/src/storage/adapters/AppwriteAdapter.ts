@@ -29,7 +29,7 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
         [Query.limit(100)]
       );
       return response.documents.map(doc => {
-        const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+        const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
         return { id: $id, ...rest } as unknown as T;
       });
     } catch (error) {
@@ -45,13 +45,53 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
         this.collectionId,
         id
       );
-      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
       return { id: $id, ...rest } as unknown as T;
     } catch (error: any) {
       if (error?.code !== 404) {
          console.error(`Appwrite getById failed for ${this.collectionId}:`, error);
       }
       return undefined;
+    }
+  }
+
+  async getByEmail(email: string): Promise<T | undefined> {
+    try {
+      const response = await this.databases.listDocuments(
+        this.databaseId,
+        this.collectionId,
+        [Query.equal('email', email), Query.limit(1)]
+      );
+      if (response.documents.length === 0) return undefined;
+      const doc = response.documents[0];
+      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
+      return { id: $id, ...rest } as unknown as T;
+    } catch (error) {
+      console.error(`Appwrite getByEmail failed for ${this.collectionId}:`, error);
+      return undefined;
+    }
+  }
+
+  async findMany(query: Partial<T>): Promise<T[]> {
+    try {
+      const appwriteQueries = [];
+      for (const [key, value] of Object.entries(query)) {
+        appwriteQueries.push(Query.equal(key, String(value)));
+      }
+      appwriteQueries.push(Query.limit(100));
+
+      const response = await this.databases.listDocuments(
+        this.databaseId,
+        this.collectionId,
+        appwriteQueries
+      );
+      return response.documents.map(doc => {
+        const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
+        return { id: $id, ...rest } as unknown as T;
+      });
+    } catch (error) {
+      console.error(`Appwrite findMany failed for ${this.collectionId}:`, error);
+      return [];
     }
   }
 
@@ -64,7 +104,7 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
         id || ID.unique(),
         data
       );
-      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+      const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
       return { id: $id, ...rest } as unknown as T;
     } catch (error) {
        console.error(`Appwrite insert failed for ${this.collectionId}:`, error);
@@ -83,7 +123,7 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
          id,
          cleanUpdates
        );
-       const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
+       const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc as any;
        return { id: $id, ...rest } as unknown as T;
     } catch (error) {
       console.error(`Appwrite update failed for ${this.collectionId}:`, error);

@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@vitejs/plugin-vue-jsx": "^5.1.5",
     "appwrite": "^26.1.0",
     "axios": "^1.18.1",
     "pinia": "^3.0.4",

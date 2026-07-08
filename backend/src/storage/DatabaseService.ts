@@ -7,7 +7,8 @@ import { getEnv } from '../utils/env.js';
 export type { StorageAdapter };
 
 export function getDatabaseAdapter<T extends { id: string }>(collectionName: string): StorageAdapter<T> {
-  const mode = process.env.STORAGE_ADAPTER || process.env.STORAGE_MODE || 'local';
+  const env = getEnv();
+  const mode = env.STORAGE_ADAPTER || process.env.STORAGE_MODE || 'local';
 
   if (mode === 'appwrite') {
     return new AppwriteAdapter<T>(collectionName);
