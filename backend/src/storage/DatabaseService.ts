@@ -8,7 +8,7 @@ export type { StorageAdapter };
 
 export function getDatabaseAdapter<T extends { id: string }>(collectionName: string): StorageAdapter<T> {
   const env = getEnv();
-  const mode = env.STORAGE_ADAPTER || process.env.STORAGE_MODE || 'local';
+  const mode = env.STORAGE_ADAPTER;
 
   if (mode === 'appwrite') {
     return new AppwriteAdapter<T>(collectionName);
@@ -18,6 +18,6 @@ export function getDatabaseAdapter<T extends { id: string }>(collectionName: str
      return new LocalJsonAdapter<T>(`${collectionName}.json`);
   }
 
-  // Default hardened local production adapter is sqlite
+  // Default: SQLite-backed local storage
   return new SqliteAdapter<T>(collectionName);
 }

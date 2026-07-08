@@ -37,7 +37,7 @@ const appointments = useAppointmentStore();
 const filterDate = ref(new Date().toISOString().split('T')[0]);
 
 const loadAppointments = () => {
-  appointments.fetchAppointments(filterDate.value);
+  appointments.fetchAppointments({ date: filterDate.value });
 };
 
 const updateStatus = async (id: string, status: string) => {

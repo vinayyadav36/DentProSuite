@@ -6,11 +6,12 @@ const dbAppointments = getDatabaseAdapter<Appointment>('appointments');
 
 export const getAppointments = async (req: Request, res: Response) => {
   try {
-    const { date, dentistId } = req.query;
+    const { date, dentistId, patientId } = req.query;
 
     const query: Partial<Appointment> = {};
     if (date) query.date = date as string;
     if (dentistId) query.dentistId = dentistId as string;
+    if (patientId) query.patientId = patientId as string;
 
     let appointments = dbAppointments.findMany
       ? await dbAppointments.findMany(query)
@@ -22,6 +23,9 @@ export const getAppointments = async (req: Request, res: Response) => {
       }
       if (dentistId) {
         appointments = appointments.filter(a => a.dentistId === dentistId);
+      }
+      if (patientId) {
+        appointments = appointments.filter(a => a.patientId === patientId);
       }
     }
 

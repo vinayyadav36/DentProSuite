@@ -142,7 +142,7 @@ export class SqliteAdapter<T extends { id: string }> implements StorageAdapter<T
 
   async insert(item: T): Promise<T> {
     await this.runCommand(
-      `INSERT INTO ${this.collectionName} (id, data) VALUES (?, ?)`,
+      `INSERT OR REPLACE INTO ${this.collectionName} (id, data) VALUES (?, ?)`,
       [item.id, JSON.stringify(item)]
     );
     return item;
