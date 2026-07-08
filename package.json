@@ -1,10 +1,14 @@
 {
+  "private": true,
   "devDependencies": {
-    "@types/node": "^26.1.0",
+    "@types/node": "^22.15.3",
     "tsx": "^4.23.0",
-    "typescript": "^6.0.3"
+    "typescript": "~5.7.0"
   },
   "dependencies": {
     "zod": "^4.4.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

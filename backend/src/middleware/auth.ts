@@ -19,7 +19,6 @@ export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction)
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-
   const decoded = verifyToken(token) as { id: string; role: UserRole } | null;
 
   if (!decoded) {

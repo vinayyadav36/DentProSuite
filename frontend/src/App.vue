@@ -27,10 +27,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { syncQueue, getSyncQueue } from './services/offlineStorage.js';
+import { useAuthStore } from './stores/auth.js';
+import { getSyncQueue, syncQueue } from './services/offlineStorage.js';
 import SyncStatus from './components/SyncStatus.vue';
-import { useAuthStore } from './stores/auth';
-import { isAppwriteEnabled, account } from './services/appwrite';
+import { isAppwriteEnabled, account } from './services/appwrite.js';
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -41,8 +41,8 @@ const updateOnlineStatus = async () => {
   isOnline.value = navigator.onLine;
   if (navigator.onLine) {
     await syncQueue();
-    await updateSyncCount();
   }
+  await updateSyncCount();
 };
 
 const updateSyncCount = async () => {

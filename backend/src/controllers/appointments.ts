@@ -6,11 +6,12 @@ const dbAppointments = getDatabaseAdapter<Appointment>('appointments');
 
 export const getAppointments = async (req: Request, res: Response) => {
   try {
-    const { date, dentistId } = req.query;
+    const { date, dentistId, patientId } = req.query;
 
     const query: Partial<Appointment> = {};
     if (date) query.date = date as string;
     if (dentistId) query.dentistId = dentistId as string;
+    if (patientId) query.patientId = patientId as string;
 
     let appointments = dbAppointments.findMany
       ? await dbAppointments.findMany(query)
@@ -22,6 +23,9 @@ export const getAppointments = async (req: Request, res: Response) => {
       }
       if (dentistId) {
         appointments = appointments.filter(a => a.dentistId === dentistId);
+      }
+      if (patientId) {
+        appointments = appointments.filter(a => a.patientId === patientId);
       }
     }
 
@@ -54,6 +58,17 @@ export const updateAppointment = async (req: Request, res: Response) => {
     const updated = await dbAppointments.update(id, req.body);
     if (!updated) return res.status(404).json({ error: 'Appointment not found' });
     res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const deleteAppointment = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id as string;
+    const deleted = await dbAppointments.delete(id);
+    if (!deleted) return res.status(404).json({ error: 'Appointment not found' });
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }

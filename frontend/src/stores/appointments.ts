@@ -11,20 +11,20 @@ export const useAppointmentStore = defineStore('appointments', {
     error: null as string | null,
   }),
   actions: {
-    async fetchAppointments(date?: string, dentistId?: string) {
+    async fetchAppointments(params?: { date?: string; dentistId?: string; patientId?: string }) {
       this.isLoading = true;
       this.error = null;
       try {
-        const params: any = {};
-        if (date) params.date = date;
-        if (dentistId) params.dentistId = dentistId;
-
-        this.appointments = await appointmentsService.getAll(params);
+        this.appointments = await appointmentsService.getAll(params || {});
       } catch (err: any) {
          this.error = err.message || 'Failed to fetch appointments';
       } finally {
         this.isLoading = false;
       }
+    },
+
+    async createAppointment(data: any) {
+      return appointmentsService.create(data);
     },
 
     async updateStatus(id: string, status: string) {

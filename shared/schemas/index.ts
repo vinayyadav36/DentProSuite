@@ -71,6 +71,27 @@ export const submitFormSchema = z.object({
   submittedBy: z.string().optional()
 });
 
+export const createClinicSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  address: z.string().min(1, 'Address is required'),
+  chairs: z.number().int().positive(),
+  operatingHours: z.object({
+    start: z.string().regex(/^\d{2}:\d{2}$/, 'Time must be HH:mm'),
+    end: z.string().regex(/^\d{2}:\d{2}$/, 'Time must be HH:mm')
+  })
+});
+
+export const updateClinicSchema = createClinicSchema.partial();
+
+export const createServiceSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  price: z.number().positive(),
+  durationMinutes: z.number().int().positive(),
+  isActive: z.boolean().optional().default(true)
+});
+
+export const updateServiceSchema = createServiceSchema.partial();
+
 export const revenueQuerySchema = z.object({
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'startDate must be YYYY-MM-DD'),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'endDate must be YYYY-MM-DD')

@@ -18,7 +18,6 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
     this.databases = new Databases(this.client);
     this.databaseId = env.APPWRITE_DATABASE_ID!;
 
-    // Fallback simple mapping, preferably collectionName maps exactly to collectionId
     this.collectionId = collectionName;
   }
 
@@ -115,7 +114,6 @@ export class AppwriteAdapter<T extends { id: string }> implements StorageAdapter
 
   async update(id: string, updates: Partial<T>): Promise<T | undefined> {
     try {
-       // Omit id from updates if present
        const cleanUpdates = { ...updates };
        delete cleanUpdates.id;
 

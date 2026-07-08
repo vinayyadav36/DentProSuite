@@ -1,8 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-// Define the root data path. Adjust if running from different directories.
-// In dev, 'backend' is the cwd or parent depending on how it's run.
 const DATA_DIR = path.join(process.cwd(), '../data');
 
 export async function ensureDataDirExists() {
