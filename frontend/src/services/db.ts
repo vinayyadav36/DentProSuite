@@ -849,6 +849,36 @@ class LocalDatabase {
     this.state = JSON.parse(JSON.stringify(INITIAL_STATE));
     this.saveState();
   }
+
+  replaceAllPatients(data: Patient[]): void {
+    this.state.patients = data;
+    this.saveState();
+  }
+
+  replaceAllAppointments(data: Appointment[]): void {
+    this.state.appointments = data;
+    this.saveState();
+  }
+
+  replaceAllInvoices(data: Invoice[]): void {
+    this.state.invoices = data;
+    this.saveState();
+  }
+
+  replaceAllFormTemplates(data: FormTemplate[]): void {
+    this.state.formTemplates = data;
+    this.saveState();
+  }
+
+  replaceAllFormSubmissions(data: FormSubmission[]): void {
+    this.state.formSubmissions = data;
+    this.saveState();
+  }
+
+  replaceAllNotifications(data: Notification[]): void {
+    this.state.notifications = data;
+    this.saveState();
+  }
 }
 
 export const db = new LocalDatabase();

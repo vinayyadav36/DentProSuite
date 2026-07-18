@@ -9,8 +9,16 @@
   "engines": {
     "node": ">=20.0.0"
   },
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "lint": "npm run lint --workspace=frontend && npm run typecheck --workspace=backend"
+  },
   "devDependencies": {
     "@types/node": "^22.15.3",
+    "concurrently": "^9.1.2",
     "tsx": "^4.23.0",
     "typescript": "~5.7.0",
     "vitest": "^2.1.8"

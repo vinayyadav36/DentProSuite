@@ -96,3 +96,73 @@ export const revenueQuerySchema = z.object({
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'startDate must be YYYY-MM-DD'),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'endDate must be YYYY-MM-DD')
 });
+
+const invoiceItemSchema = z.object({
+  description: z.string().min(1, 'Description is required'),
+  quantity: z.number().int().positive(),
+  unitPrice: z.number().positive()
+});
+
+const paymentRecordSchema = z.object({
+  amount: z.number().positive(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  method: z.enum(['CASH', 'CARD', 'INSURANCE', 'BANK_TRANSFER'])
+});
+
+export const createInvoiceSchema = z.object({
+  patientId: z.string().min(1, 'Patient ID is required'),
+  appointmentId: z.string().optional(),
+  issuedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  items: z.array(invoiceItemSchema).min(1, 'At least one item is required'),
+  status: z.enum(['UNPAID', 'PAID', 'PARTIALLY_PAID', 'CANCELLED']).optional().default('UNPAID'),
+  payments: z.array(paymentRecordSchema).optional().default([]),
+  notes: z.string().optional()
+});
+
+export const updateInvoiceSchema = z.object({
+  patientId: z.string().optional(),
+  appointmentId: z.string().optional(),
+  issuedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  items: z.array(invoiceItemSchema).optional(),
+  status: z.enum(['UNPAID', 'PAID', 'PARTIALLY_PAID', 'CANCELLED']).optional(),
+  payments: z.array(paymentRecordSchema).optional(),
+  notes: z.string().optional()
+});
+
+export const createNotificationSchema = z.object({
+  userId: z.string().min(1, 'User ID is required'),
+  title: z.string().min(1, 'Title is required'),
+  message: z.string().min(1, 'Message is required')
+});
+
+export const updateSettingsSchema = z.object({
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z.string().optional(),
+  operatingHours: z.record(z.string(), z.object({
+    open: z.string().regex(/^\d{2}:\d{2}$/),
+    close: z.string().regex(/^\d{2}:\d{2}$/),
+    active: z.boolean()
+  })).optional(),
+  chairs: z.array(z.string()).optional(),
+  autoSync: z.boolean().optional(),
+  offlineMode: z.boolean().optional()
+});
+
+export const registerClinicSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  phone: z.string().min(1, 'Phone is required'),
+  email: z.string().email('Valid email is required'),
+  address: z.string().min(1, 'Address is required'),
+  tier: z.enum(['BASIC', 'PREMIUM', 'ENTERPRISE'])
+});
+
+export const updateClinicSubscriptionSchema = z.object({
+  subscriptionTier: z.enum(['BASIC', 'PREMIUM', 'ENTERPRISE']).optional(),
+  subscriptionStatus: z.enum(['ACTIVE', 'PAST_DUE', 'TRIAL', 'CANCELLED']).optional(),
+  monthlyPrice: z.number().positive().optional(),
+  nextBillingDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()
+});
