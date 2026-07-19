@@ -8,10 +8,11 @@ export async function seedUsers() {
   const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash('password123', salt);
 
-  await dbUsers.insert({ id: 'admin-1', email: 'admin@clinic.com', passwordHash, role: 'ADMIN', name: 'Admin Alice', createdAt: new Date().toISOString() });
-  await dbUsers.insert({ id: 'reception-1', email: 'reception@clinic.com', passwordHash, role: 'RECEPTION', name: 'Rec Rachel', createdAt: new Date().toISOString() });
-  await dbUsers.insert({ id: 'dentist-1', email: 'dentist1@clinic.com', passwordHash, role: 'DENTIST', name: 'Dr. Smile', createdAt: new Date().toISOString() });
-  await dbUsers.insert({ id: 'dentist-2', email: 'dentist2@clinic.com', passwordHash, role: 'DENTIST', name: 'Dr. Drill', createdAt: new Date().toISOString() });
+  await dbUsers.insert({ id: 'user_admin', email: 'admin@dentpro.com', passwordHash, role: 'ADMIN', name: 'Dr. Arthur Vance', createdAt: new Date().toISOString() });
+  await dbUsers.insert({ id: 'user_reception', email: 'reception@dentpro.com', passwordHash, role: 'RECEPTION', name: 'Clara Oswald', createdAt: new Date().toISOString() });
+  await dbUsers.insert({ id: 'user_dentist_1', email: 'dentist1@dentpro.com', passwordHash, role: 'DENTIST', name: 'Dr. Sarah Carter', createdAt: new Date().toISOString() });
+  await dbUsers.insert({ id: 'user_dentist_2', email: 'dentist2@dentpro.com', passwordHash, role: 'DENTIST', name: 'Dr. Marcus Vance', createdAt: new Date().toISOString() });
+  await dbUsers.insert({ id: 'user_patient', email: 'patient@dentpro.com', passwordHash, role: 'PATIENT', name: 'John Doe', createdAt: new Date().toISOString() });
 
   console.log('Seeded users.');
 }

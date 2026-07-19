@@ -17,34 +17,10 @@ function getDb(): sqlite3.Database {
   dbInstance = new sqlite3.Database(dbPath);
 
   dbInstance.serialize(() => {
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      data TEXT
-    )`);
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS clinics (
-      id TEXT PRIMARY KEY,
-      data TEXT
-    )`);
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS patients (
-      id TEXT PRIMARY KEY,
-      data TEXT
-    )`);
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS appointments (
-      id TEXT PRIMARY KEY,
-      data TEXT
-    )`);
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS templates (
-      id TEXT PRIMARY KEY,
-      data TEXT
-    )`);
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS submissions (
-      id TEXT PRIMARY KEY,
-      data TEXT
-    )`);
-    dbInstance!.run(`CREATE TABLE IF NOT EXISTS services (
-      id TEXT PRIMARY KEY,
-      data TEXT
-    )`);
+    const tables = ['users', 'clinics', 'patients', 'appointments', 'templates', 'submissions', 'services', 'invoices', 'notifications', 'settings'];
+    for (const table of tables) {
+      dbInstance!.run(`CREATE TABLE IF NOT EXISTS ${table} (id TEXT PRIMARY KEY, data TEXT)`);
+    }
   });
 
   return dbInstance;

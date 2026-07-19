@@ -111,7 +111,7 @@ export const AppointmentManagement: React.FC = () => {
     }
 
     return true;
-  }).sort((a,b) => a.time.localeCompare(b.time));
+  }).sort((a,b) => (a.time || '').localeCompare(b.time || ''));
 
   const handleCreateAppointment = (e: React.FormEvent) => {
     e.preventDefault();

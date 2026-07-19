@@ -443,11 +443,11 @@ export const PatientManagement: React.FC = () => {
                       Active Clinic Allergen Disclaimers
                     </div>
                     
-                    {activePat.medicalHistory.length === 0 ? (
+                    {(activePat.medicalHistory || []).length === 0 ? (
                       <p className="font-semibold text-rose-700">No active disclaimers or allergies logged on this record file.</p>
                     ) : (
                       <ul className="list-disc pl-5 font-bold space-y-1">
-                        {activePat.medicalHistory.map((h, i) => (
+                        {(activePat.medicalHistory || []).map((h, i) => (
                           <li key={i}>{h}</li>
                         ))}
                       </ul>

@@ -5,6 +5,8 @@ import { seedForms } from './seedForms.js';
 import { seedAppointments } from './seedAppointments.js';
 import { seedBilling } from './seedBilling.js';
 import { seedServices } from './seedServices.js';
+import { seedNotifications } from './seedNotifications.js';
+import { seedSettings } from './seedSettings.js';
 
 async function seed() {
   console.log('Seeding data...');
@@ -16,6 +18,8 @@ async function seed() {
   await seedServices();
   await seedAppointments();
   await seedBilling();
+  await seedNotifications();
+  await seedSettings();
 
   console.log('Seed data generated successfully.');
 }

@@ -1,36 +1,44 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Eye, EyeOff, Lock, Mail, Loader2, Database, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Loader2, Database, ShieldCheck, AlertCircle } from 'lucide-react';
+import { apiClient } from '../services/api';
 import { SEED_USERS } from '../services/db';
 
 export const LoginView: React.FC = () => {
-  const { login } = useApp();
+  const { login, loginWithUser } = useApp();
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<'ADMIN' | 'RECEPTION' | 'DENTIST' | 'PATIENT'>('ADMIN');
-  const [password, setPassword] = useState('password');
+  const [password, setPassword] = useState('password123');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Simulated short delay for professional auth check feedback
-    setTimeout(() => {
-      const success = login(email, role);
+    try {
+      const response = await apiClient.post('/api/auth/login', { email, password });
+      const { token, user } = response.data;
+      
+      // Store token for future API calls
+      localStorage.setItem('token', token);
+      
+      // Call AppContext login with backend user data
+      loginWithUser(user);
       setIsLoading(false);
-      if (!success) {
-        setError('Invalid clinical credential profile or role mis-match.');
-      }
-    }, 800);
+    } catch (err: any) {
+      setIsLoading(false);
+      const message = err.response?.data?.error || err.message || 'Invalid credentials or server error';
+      setError(message);
+    }
   };
 
   const handleQuickLogin = (userEmail: string, userRole: 'ADMIN' | 'RECEPTION' | 'DENTIST' | 'PATIENT') => {
     setEmail(userEmail);
     setRole(userRole);
-    setPassword('password');
+    setPassword('password123');
     setError('');
   };
 

@@ -7,7 +7,7 @@ import { loginSchema } from '../../../shared/schemas/index.js';
 
 const router = Router();
 
-router.post('/login', loginLimiter, validate(loginSchema), login);
+router.post('/login', loginLimiter as any, validate(loginSchema), login);
 router.get('/me', requireAuth, me);
 
 export default router;
